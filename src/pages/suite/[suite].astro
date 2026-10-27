@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+export function getStaticPaths() {
+  return [
+    { params: { suite: '1' } },
+    { params: { suite: '2' } },
+    { params: { suite: '3' } },
+    { params: { suite: '4' } },
+  ];
+}
+
+const { suite } = Astro.params;
+const suiteNumber = Number(suite);
+
+const getImages = (dir: string) => {
+  const full = path.join(process.cwd(), 'public', dir);
+  try {
+    return fs
+      .readdirSync(full)
+      .filter((f) => f.endsWith('.avif') || f.endsWith('.jpg') || f.endsWith('.png') || f.endsWith('.webp'))
+      .sort()
+      .map((f) => `/${dir}/${f}`);
+  } catch {
+    return [];
+  }
+};
+
+const suiteDir = `assets/habitacion-0${suiteNumber}`;
+const suiteImages = getImages(suiteDir);
+const patioImages = getImages('assets').filter((f) => f.includes('/assets/patio-'));
+const cocinaImages = getImages('assets').filter((f) => f.includes('/assets/cocina-'));
+const salaImages = getImages('assets').filter((f) => f.includes('/assets/sala-'));
+
+const habitacionImages = suiteImages.filter((f) => f.includes('habitacion-'));
+const banoImages = suiteImages.filter((f) => f.includes('bano'));
+
+const allImages = [...habitacionImages, ...banoImages, ...patioImages, ...cocinaImages, ...salaImages];
+
+const getGroup = (src: string) => {
+  const s = src.toLowerCase();
+  if (s.includes('habitacion')) return { key: 'habitaciones', label: 'Habitaciones' };
+  if (s.includes('bano') || s.includes('baño')) return { key: 'bano', label: 'Baño' };
+  if (s.includes('patio')) return { key: 'patio', label: 'Patio' };
+  if (s.includes('cocina')) return { key: 'cocina', label: 'Cocina' };
+  if (s.includes('sala') || s.includes('salon') || s.includes('salón')) return { key: 'salon', label: 'Salón' };
+  return { key: 'otros', label: 'Otros' };
+};
+
+const order = ['habitaciones', 'bano', 'patio', 'cocina', 'salon', 'otros'];
+
+const groups = allImages.reduce(
+  (acc, src) => {
+    const g = getGroup(src);
+    if (!acc[g.key]) {
+      acc[g.key] = { label: g.label, images: [] as string[] };
+    }
+    acc[g.key].images.push(src);
+    return acc;
+  },
+  {} as Record<string, { label: string; images: string[] }>
+);
+
+const grouped = order
+  .filter((key) => groups[key] && groups[key].images.length > 0)
+  .map((key) => groups[key]);
+
+const roomName = `Suite ${suiteNumber}`;
+---
+<BaseLayout title={`${roomName} - Posada Amarella`} description={`${roomName} - Galería completa`}>
+  <main class="min-h-screen bg-bg">
+    <header class="sticky top-0 z-30 border-b border-border bg-bg/80 backdrop-blur">
+      <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
+        <a href="/#suite-${suiteNumber}" class="inline-flex items-center gap-2 text-sm hover:text-accent transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Volver al listado
+        </a>
+        <p class="font-heading font-semibold">{roomName}</p>
+        <div class="w-24"></div>
+      </div>
+    </header>
+
+    <section class="mx-auto max-w-7xl px-4 py-6 sm:py-10">
+      <div class="flex flex-col gap-10">
+        {grouped.map((group, gIdx) => (
+          <div class="flex flex-col gap-4">
+            <h2 class="text-xl sm:text-2xl font-heading font-semibold">{group.label}</h2>
+            <div class="grid gap-2 sm:gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {group.images.map((src, idx) => (
+                <figure
+                  class:list={[
+                    "overflow-hidden rounded-xl border border-border bg-bg-subtle",
+                    idx === 0 && group.images.length >= 2 && "md:col-span-2 md:row-span-2",
+                  ]}
+                >
+                  <img
+                    src={src}
+                    alt={`${roomName} - ${group.label.toLowerCase()}`}
+                    class="h-full w-full object-cover aspect-square md:aspect-auto"
+                    loading={gIdx === 0 && idx < 4 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                </figure>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+  <script is:inline>
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const back = document.querySelector('a[href^="/#suite-"]');
+        if (back) {
+          back.click();
+        } else {
+          history.back();
+        }
+      }
+    });
+  </script>
+</BaseLayout>
