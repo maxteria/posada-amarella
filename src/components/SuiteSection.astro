@@ -65,9 +65,9 @@ const galleryHref = `/suite/${suiteNumber}`;
           </div>
         </div>
 
-        {images.length > 5 && (
+        {images.length > 0 && (
           <div class="pointer-events-none absolute top-0 right-0 m-3 rounded-full bg-black/60 px-2.5 py-1 text-xs text-white/90 backdrop-blur sm:m-4 z-20">
-            +{images.length - 5} fotos
+            +{images.length} fotos
           </div>
         )}
       </div>
