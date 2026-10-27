@@ -51,14 +51,14 @@ const galleryHref = `/suite/${suiteNumber}`;
           <p class="text-xl font-heading font-semibold text-white sm:text-2xl md:text-3xl">{roomName}</p>
           <p class="max-w-xl text-sm text-white/80 sm:text-base">{subtitle}</p>
           <div class="mt-2 flex flex-col gap-2 sm:flex-row">
-            <div class="pointer-events-auto">
-              <WhatsAppButton room={roomName} label={whatsappLabel} />
+            <div class="pointer-events-auto w-full sm:w-auto">
+              <WhatsAppButton room={roomName} label={whatsappLabel} fullWidth />
             </div>
             <a
               href={airbnbUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="pointer-events-auto inline-flex items-center justify-center rounded-lg border border-white/40 bg-white/10 px-4 py-2 text-white backdrop-blur transition-colors hover:bg-white/20"
+              class="pointer-events-auto inline-flex w-full sm:w-auto items-center justify-center rounded-lg border border-white/40 bg-white/10 px-4 py-2 text-white backdrop-blur transition-colors hover:bg-white/20"
             >
               Ver en Airbnb
             </a>
