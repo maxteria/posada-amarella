@@ -1,0 +1,79 @@
+---
+import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  suiteNumber: number;
+  id: string;
+  airbnbUrl: string;
+  images: string[];
+  subtitle: string;
+}
+
+const { suiteNumber, id, airbnbUrl, images, subtitle } = Astro.props;
+const roomName = `Suite ${suiteNumber}`;
+const whatsappLabel = `Consultar disponibilidad ${roomName}`;
+
+const visibleImages = images.slice(0, 5);
+---
+
+<section id={id} class="scroll-mt-28 py-12 sm:py-16">
+  <div class="mx-auto max-w-6xl px-4">
+    <div class="mb-6">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-heading font-semibold">{roomName}</h2>
+      <p class="mt-2 max-w-2xl text-base sm:text-lg text-text-secondary">{subtitle}</p>
+    </div>
+
+    <div class="relative overflow-hidden rounded-2xl border border-border shadow-sm">
+      <div class="relative aspect-[4/3] w-full sm:aspect-[16/9]">
+        <div class="absolute inset-0 grid grid-cols-[2fr_1fr] grid-rows-2 gap-[1px] lg:grid-cols-[2fr_1fr_1fr] lg:gap-[2px]">
+          {visibleImages.map((src, index) => (
+            <button
+              type="button"
+              class:list={[
+                "group relative h-full w-full overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70",
+                index === 0 && "col-start-1 row-start-1 row-span-2",
+                index === 1 && "col-start-2 row-start-1",
+                index === 2 && "col-start-2 row-start-2",
+                index === 3 && "hidden lg:block lg:col-start-3 lg:row-start-1",
+                index === 4 && "hidden lg:block lg:col-start-3 lg:row-start-2",
+              ]}
+              aria-label={`Ver galería de ${roomName}, imagen ${index + 1}`}
+            >
+              <img
+                src={src}
+                alt={`${roomName} - foto ${index + 1}`}
+                class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </button>
+          ))}
+        </div>
+
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent"></div>
+
+        <div class="absolute bottom-0 left-0 flex flex-col gap-2 p-4 sm:p-8">
+          <p class="text-xl font-heading font-semibold text-white sm:text-2xl md:text-3xl">{roomName}</p>
+          <p class="max-w-xl text-sm text-white/80 sm:text-base">{subtitle}</p>
+          <div class="mt-2 flex flex-col gap-2 sm:flex-row">
+            <WhatsAppButton room={roomName} label={whatsappLabel} />
+            <a
+              href={airbnbUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center rounded-lg border border-white/40 bg-white/10 px-4 py-2 text-white backdrop-blur transition-colors hover:bg-white/20"
+            >
+              Ver en Airbnb
+            </a>
+          </div>
+        </div>
+
+        {images.length > 3 && (
+          <div class="pointer-events-none absolute bottom-0 right-0 m-4 rounded-full bg-black/60 px-3 py-1 text-xs text-white/90 backdrop-blur sm:m-6">
+            {images.length > 5 ? `+${images.length - 5} fotos` : `+${images.length - 3} fotos`}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>

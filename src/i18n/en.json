@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "whatsapp": "Check availability on WhatsApp",
+    "airbnb": "View on Airbnb"
+  },
+  "hero": {
+    "title": "Posada Amarella",
+    "claim": "A quiet place to rest, close to everything you need.",
+    "ctaWhatsapp": "Check availability on WhatsApp",
+    "ctaAirbnb": "View on Airbnb"
+  },
+  "about": {
+    "title": "The Inn",
+    "text": "Posada Amarella welcomes you with warmth in a simple and comfortable setting. Designed for you to rest and enjoy your stay in peace."
+  },
+  "rooms": {
+    "title": "Rooms",
+    "suite": "Suite",
+    "whatsapp": "Check availability on WhatsApp",
+    "airbnb": "View on Airbnb"
+  },
+  "footer": {
+    "text": "Posada Amarella"
+  }
+}

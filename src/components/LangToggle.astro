@@ -1,0 +1,18 @@
+---
+
+<div class="flex items-center gap-1 rounded-lg border border-border p-1 text-xs">
+  <a href="/" class="lang-btn px-2 py-1 rounded-md hover:bg-bg-subtle" data-lang="es">ES</a>
+  <a href="/en/" class="lang-btn px-2 py-1 rounded-md hover:bg-bg-subtle" data-lang="en">EN</a>
+  <a href="/pt/" class="lang-btn px-2 py-1 rounded-md hover:bg-bg-subtle" data-lang="pt">PT</a>
+</div>
+
+<script>
+  const path = window.location.pathname;
+  const langBtns = document.querySelectorAll('.lang-btn');
+  langBtns.forEach((btn) => {
+    const l = btn.getAttribute('data-lang');
+    if ((l === 'es' && path === '/') || (path.startsWith('/' + l + '/')) || (path === '/' + l)) {
+      btn.classList.add('bg-bg-subtle');
+    }
+  });
+</script>

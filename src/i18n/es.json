@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "whatsapp": "Consultar por WhatsApp",
+    "airbnb": "Ver en Airbnb"
+  },
+  "hero": {
+    "title": "Posada Amarella",
+    "claim": "Un espacio tranquilo para descansar, cerca de todo lo que necesitás.",
+    "ctaWhatsapp": "Consultar por WhatsApp",
+    "ctaAirbnb": "Ver en Airbnb"
+  },
+  "about": {
+    "title": "La Posada",
+    "text": "Posada Amarella te recibe con calidez en un ambiente sencillo y confortable. Ideada para que descanses y disfrutes tu estadía con la tranquilidad que buscás."
+  },
+  "rooms": {
+    "title": "Habitaciones",
+    "suite": "Suite",
+    "whatsapp": "Consultar por WhatsApp",
+    "airbnb": "Ver en Airbnb"
+  },
+  "footer": {
+    "text": "Posada Amarella"
+  }
+}

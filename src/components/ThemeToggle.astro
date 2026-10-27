@@ -1,0 +1,52 @@
+---
+
+---
+
+<div class="flex items-center gap-1 rounded-lg border border-border p-1 text-xs">
+  <button data-theme="light" class="theme-btn px-2 py-1 rounded-md hover:bg-bg-subtle" aria-label="Light">☀️</button>
+  <button data-theme="dark" class="theme-btn px-2 py-1 rounded-md hover:bg-bg-subtle" aria-label="Dark">🌙</button>
+  <button data-theme="system" class="theme-btn px-2 py-1 rounded-md hover:bg-bg-subtle" aria-label="System">💻</button>
+</div>
+
+<script>
+  const themeBtns = document.querySelectorAll('.theme-btn');
+  const getTheme = () => localStorage.getItem('theme') || 'system';
+  const setTheme = (theme: string) => {
+    localStorage.setItem('theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else if (theme === 'light') {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    } else {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      }
+    }
+    updateActive();
+  };
+  const updateActive = () => {
+    const current = getTheme();
+    themeBtns.forEach((btn) => {
+      const t = btn.getAttribute('data-theme');
+      if (t === current) {
+        btn.classList.add('bg-bg-subtle');
+      } else {
+        btn.classList.remove('bg-bg-subtle');
+      }
+    });
+  };
+  themeBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const t = btn.getAttribute('data-theme') || 'system';
+      setTheme(t);
+    });
+  });
+  updateActive();
+</script>

@@ -1,0 +1,38 @@
+---
+import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  suiteNumber: number;
+  airbnbUrl: string;
+  coverImage?: string;
+}
+
+const { suiteNumber, airbnbUrl, coverImage } = Astro.props;
+const roomName = `Suite ${suiteNumber}`;
+---
+
+<article class="rounded-xl border border-border bg-bg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+  <div class="aspect-video w-full bg-bg-subtle overflow-hidden">
+    {coverImage ? (
+      <img
+        src={coverImage}
+        alt={`${roomName} - Posada Amarella`}
+        class="h-full w-full object-cover"
+        loading="lazy"
+      />
+    ) : (
+      <div class="flex h-full w-full items-center justify-center text-text-secondary">
+        <span class="text-sm">Foto (pendiente)</span>
+      </div>
+    )}
+  </div>
+  <div class="p-4 flex flex-col gap-3">
+    <h3 class="text-lg font-heading font-semibold">{roomName}</h3>
+    <div class="flex flex-col sm:flex-row gap-2">
+      <WhatsAppButton room={roomName} label="Consultar por WhatsApp" class="flex-1" />
+      <a href={airbnbUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 hover:bg-bg-subtle transition-colors flex-1">
+        Ver en Airbnb
+      </a>
+    </div>
+  </div>
+</article>
