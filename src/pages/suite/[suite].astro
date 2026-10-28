@@ -34,8 +34,8 @@ const patioImages = getImages('assets').filter((f) => f.includes('/assets/patio-
 const cocinaImages = getImages('assets').filter((f) => f.includes('/assets/cocina-'));
 const salaImages = getImages('assets').filter((f) => f.includes('/assets/sala-'));
 
-const habitacionImages = suiteImages.filter((f) => f.includes('habitacion-'));
-const banoImages = suiteImages.filter((f) => f.includes('bano'));
+const habitacionImages = suiteImages.filter((f) => f.toLowerCase().includes('habitacion-'));
+const banoImages = suiteImages.filter((f) => f.toLowerCase().includes('bano'));
 
 const allImages = [...habitacionImages, ...banoImages, ...patioImages, ...cocinaImages, ...salaImages];
 
