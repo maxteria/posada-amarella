@@ -4,7 +4,24 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
-const SITE_URL = process.env.SITE_URL ?? 'https://posadaamarella.com';
+/**
+ * Absolute URLs are required for canonical, hreflang, Open Graph and the
+ * sitemap. Resolution order:
+ *   1. SITE_URL              - explicit override, use this for a custom domain.
+ *   2. VERCEL_PROJECT_PRODUCTION_URL - set by Vercel, the production alias.
+ *   3. VERCEL_URL            - set by Vercel, the current deployment alias.
+ *   4. localhost             - local builds.
+ */
+const toUrl = (value) => {
+  if (!value) return undefined;
+  return value.startsWith('http') ? value : `https://${value}`;
+};
+
+const SITE_URL =
+  toUrl(process.env.SITE_URL) ??
+  toUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL) ??
+  toUrl(process.env.VERCEL_URL) ??
+  'http://localhost:4321';
 
 // Images shown by each route, so Google can index them from the sitemap.
 const pageImages = {
@@ -17,8 +34,6 @@ const pageImages = {
 
 // https://astro.build/config
 export default defineConfig({
-  // Absolute URLs for canonical, hreflang and Open Graph tags.
-  // Override with SITE_URL when deploying to a custom domain.
   site: SITE_URL,
   integrations: [
     sitemap({
