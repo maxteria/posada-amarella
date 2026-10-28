@@ -47,7 +47,7 @@ const galleryHref = `/suite/${suiteNumber}`;
 
         <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent"></div>
 
-        <div class="absolute bottom-0 left-0 flex flex-col gap-2 p-4 sm:p-8 z-20">
+        <div class="absolute bottom-0 left-0 flex flex-col gap-2 p-4 sm:p-8 z-30">
           <p class="text-xl font-heading font-semibold text-white sm:text-2xl md:text-3xl">{roomName}</p>
           <p class="max-w-xl text-sm text-white/80 sm:text-base">{subtitle}</p>
           <div class="mt-2 flex flex-col gap-2 sm:flex-row">
@@ -66,7 +66,7 @@ const galleryHref = `/suite/${suiteNumber}`;
         </div>
 
         {images.length > 0 && (
-          <div class="pointer-events-none absolute top-0 right-0 m-3 rounded-full bg-black/60 px-2.5 py-1 text-xs text-white/90 backdrop-blur sm:m-4 z-20">
+          <div class="pointer-events-none absolute top-0 right-0 m-3 rounded-full bg-black/60 px-2.5 py-1 text-xs text-white/90 backdrop-blur sm:m-4 z-30">
             +{images.length} fotos
           </div>
         )}
