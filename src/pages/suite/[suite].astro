@@ -41,8 +41,8 @@ const allImages = [...habitacionImages, ...banoImages, ...patioImages, ...cocina
 
 const getGroup = (src: string) => {
   const s = src.toLowerCase();
-  if (s.includes('habitacion')) return { key: 'habitacion', label: 'Habitación' };
   if (s.includes('bano') || s.includes('baño')) return { key: 'bano', label: 'Baño' };
+  if (s.includes('habitacion')) return { key: 'habitacion', label: 'Habitación' };
   if (s.includes('patio')) return { key: 'patio', label: 'Patio' };
   if (s.includes('cocina')) return { key: 'cocina', label: 'Cocina' };
   if (s.includes('sala') || s.includes('salon') || s.includes('salón')) return { key: 'salon', label: 'Salón' };
