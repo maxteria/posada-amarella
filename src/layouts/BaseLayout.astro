@@ -4,13 +4,45 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  lang?: 'es' | 'en' | 'pt';
+  noindex?: boolean;
 }
 
-const { title = 'Posada Amarella', description = 'Posada Amarella - Consultá disponibilidad por WhatsApp o Airbnb.' } = Astro.props;
+const {
+  title = 'Posada Amarella - Suites en el valle',
+  description = 'Posada Amarella - Consultá disponibilidad por WhatsApp o Airbnb.',
+  image = '/og-image.jpg',
+  type = 'website',
+  lang = 'es',
+  noindex = false,
+} = Astro.props;
+
+const site = Astro.site ?? new URL('http://localhost:4321');
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL(image, site).href;
+
+const localeMap = { es: 'es_AR', en: 'en_US', pt: 'pt_BR' } as const;
+const currentLocale = localeMap[lang];
+const alternateLocales = (['es', 'en', 'pt'] as const)
+  .filter((code) => code !== lang)
+  .map((code) => localeMap[code]);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'LodgingBusiness',
+  name: 'Posada Amarella',
+  description,
+  url: canonical,
+  image: ogImage,
+  numberOfRooms: 4,
+  sameAs: ['https://www.airbnb.cl/users/profile/1511006932022722037'],
+};
 ---
 
 <!doctype html>
-<html lang="es" class="light">
+<html lang={lang} class="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,8 +51,41 @@ const { title = 'Posada Amarella', description = 'Posada Amarella - Consultá di
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="generator" content={Astro.generator} />
+
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="alternate" hreflang="es" href={new URL('/', site).href} />
+    <link rel="alternate" hreflang="en" href={new URL('/en/', site).href} />
+    <link rel="alternate" hreflang="pt" href={new URL('/pt/', site).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', site).href} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Posada Amarella" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Patio de Posada Amarella" />
+    <meta property="og:locale" content={currentLocale} />
+    {alternateLocales.map((locale) => (
+      <meta property="og:locale:alternate" content={locale} />
+    ))}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content="Patio de Posada Amarella" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">

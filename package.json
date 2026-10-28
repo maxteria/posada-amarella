@@ -12,8 +12,23 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.4.2",
     "tailwindcss": "^4.3.3"
-  }
+  },
+  "description": "```sh pnpm create astro@latest -- --template minimal ```",
+  "main": "check-mobile.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxteria/posada-amarella.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maxteria/posada-amarella/issues"
+  },
+  "homepage": "https://github.com/maxteria/posada-amarella#readme"
 }
