@@ -92,11 +92,15 @@ const roomName = `Suite ${suiteNumber}`;
             <h2 class="text-xl sm:text-2xl font-heading font-semibold">{group.label}</h2>
             <div class="grid gap-2 sm:gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {group.images.map((src, idx) => (
-                <figure
+                <button
+                  type="button"
                   class:list={[
-                    "overflow-hidden rounded-xl border border-border bg-bg-subtle",
+                    "overflow-hidden rounded-xl border border-border bg-bg-subtle text-left",
                     idx === 0 && group.key === 'habitacion' && group.images.length >= 2 && "md:col-span-2 md:row-span-2",
                   ]}
+                  data-lightbox-open
+                  data-lightbox-src={src}
+                  aria-label="Ampliar imagen"
                 >
                   <img
                     src={src}
@@ -105,7 +109,7 @@ const roomName = `Suite ${suiteNumber}`;
                     loading={gIdx === 0 && idx < 4 ? "eager" : "lazy"}
                     decoding="async"
                   />
-                </figure>
+                </button>
               ))}
             </div>
           </div>
@@ -113,16 +117,75 @@ const roomName = `Suite ${suiteNumber}`;
       </div>
     </section>
   </main>
+
+  <div id="gallery-lightbox" class="fixed inset-0 z-[100] hidden">
+    <div id="gallery-lightbox-backdrop" class="absolute inset-0 bg-black/95"></div>
+    <button id="gallery-lightbox-close" class="absolute top-4 right-4 z-10 inline-flex items-center justify-center rounded-full p-2 text-white hover:bg-white/10" aria-label="Cerrar">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <button id="gallery-lightbox-prev" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 inline-flex items-center justify-center rounded-full p-2 text-white hover:bg-white/10" aria-label="Anterior">
+      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <button id="gallery-lightbox-next" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 inline-flex items-center justify-center rounded-full p-2 text-white hover:bg-white/10" aria-label="Siguiente">
+      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+    <div class="relative h-full w-full flex items-center justify-center p-4 sm:p-10">
+      <img id="gallery-lightbox-image" src="" alt="" class="max-h-[90vh] max-w-[90vw] object-contain" />
+    </div>
+  </div>
+
   <script is:inline>
+    const lightbox = document.getElementById('gallery-lightbox');
+    const lightboxImg = document.getElementById('gallery-lightbox-image');
+    const closeBtn = document.getElementById('gallery-lightbox-close');
+    const prevBtn = document.getElementById('gallery-lightbox-prev');
+    const nextBtn = document.getElementById('gallery-lightbox-next');
+    const backdrop = document.getElementById('gallery-lightbox-backdrop');
+    const triggers = Array.from(document.querySelectorAll('[data-lightbox-open]'));
+    const images = triggers.map((t) => t.getAttribute('data-lightbox-src')).filter(Boolean);
+    let index = 0;
+
+    const open = (i) => {
+      index = i;
+      if (!images[index]) return;
+      lightboxImg.src = images[index];
+      lightbox.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const close = () => {
+      lightbox.classList.add('hidden');
+      document.body.style.overflow = '';
+    };
+
+    const prev = () => open((index - 1 + images.length) % images.length);
+    const next = () => open((index + 1) % images.length);
+
+    triggers.forEach((t, i) => t.addEventListener('click', () => open(i)));
+    closeBtn?.addEventListener('click', close);
+    backdrop?.addEventListener('click', close);
+    prevBtn?.addEventListener('click', prev);
+    nextBtn?.addEventListener('click', next);
+
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const back = document.querySelector('a[href^="/#suite-"]');
-        if (back) {
-          back.click();
-        } else {
-          history.back();
+      if (lightbox.classList.contains('hidden')) {
+        if (e.key === 'Escape') {
+          const back = document.querySelector('a[href^="/#suite-"]');
+          if (back) back.click();
+          else history.back();
         }
+        return;
       }
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
     });
   </script>
 </BaseLayout>
