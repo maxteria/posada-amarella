@@ -95,7 +95,7 @@ const roomName = `Suite ${suiteNumber}`;
                 <figure
                   class:list={[
                     "overflow-hidden rounded-xl border border-border bg-bg-subtle",
-                    idx === 0 && group.images.length >= 2 && "md:col-span-2 md:row-span-2",
+                    idx === 0 && group.key === 'habitacion' && group.images.length >= 2 && "md:col-span-2 md:row-span-2",
                   ]}
                 >
                   <img
