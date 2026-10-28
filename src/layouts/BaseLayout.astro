@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import FloatingActions from '../components/FloatingActions.astro';
 
 interface Props {
   title?: string;
@@ -121,5 +122,6 @@ const structuredData = {
   </head>
   <body class="min-h-screen bg-bg text-text-primary transition-colors">
     <slot />
+    <FloatingActions lang={lang} />
   </body>
 </html>
