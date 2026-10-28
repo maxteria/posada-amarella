@@ -20,7 +20,7 @@ const galleryHref = `/suite/${suiteNumber}`;
 <section id={id} class="scroll-mt-28">
   <div class="mx-auto max-w-6xl">
     <div class="group relative overflow-hidden rounded-2xl border border-border shadow-sm transition-shadow hover:shadow-md">
-      <a href={galleryHref} class="absolute inset-0 z-10" aria-label={`Ver galería de ${roomName}`}></a>
+      <a href={galleryHref} class="absolute inset-0 z-0" aria-label={`Ver galería de ${roomName}`}></a>
       <div class="relative aspect-[4/3] w-full sm:aspect-[16/9]">
         <div class="absolute inset-0 grid grid-cols-[2fr_1fr] grid-rows-2 gap-[1px] lg:grid-cols-[2fr_1fr_1fr] lg:gap-[2px]">
           {visibleImages.map((src, index) => (
