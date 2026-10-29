@@ -1,43 +1,72 @@
-# Astro Starter Kit: Minimal
+# Posada Amarella
+
+Marketing site for a rural guesthouse: hero, suite listings, and one gallery page per suite. Static build, no backend, no database. Booking enquiries go out through WhatsApp or Airbnb.
+
+## Stack
+
+- [Astro](https://astro.build) 7 with the static output preset
+- [Tailwind CSS](https://tailwindcss.com) 4 through the Vite plugin
+- `@astrojs/sitemap` for `sitemap-index.xml`
+
+No client framework, no runtime dependencies. The only JavaScript that ships is a handful of inline modules for the theme toggle, the language switcher, the mobile menu, the gallery lightbox, and the floating actions.
+
+## Getting started
 
 ```sh
-pnpm create astro@latest -- --template minimal
+pnpm install
+pnpm dev      # http://localhost:4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+pnpm build    # writes dist/
+pnpm preview  # serve dist/ locally
+pnpm test     # build, then run the smoke tests against dist/
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Routes
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Route | Content |
+| --- | --- |
+| `/` | Spanish landing page |
+| `/en/`, `/pt/` | English and Portuguese landing pages |
+| `/suite/1` … `/suite/4` | Gallery for one suite, grouped by room area |
 
-Any static assets, like images, can be placed in the `public/` directory.
+The three landing pages are hand-maintained and share structure but not content. When you change a shared component, check all of them.
 
-## 🧞 Commands
+## Project layout
 
-All commands are run from the root of the project, from a terminal:
+```
+src/
+  components/    Header, Footer, SuiteSection, FloatingActions, toggles
+  layouts/       BaseLayout: head metadata, theme bootstrap
+  pages/         index.astro, en/, pt/, suite/[suite].astro, robots.txt.ts
+  styles/        global.css (design tokens)
+public/
+  assets/        every photo, one folder per suite plus shared areas
+  *.png, *.ico   icons and the link-preview image
+design/          source art for the logo and favicons (not published)
+tests/           smoke tests over the built HTML
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+Suite galleries read their images from `public/assets/` at build time with `fs.readdirSync`, so adding a photo means dropping the file into the right folder — no code change.
 
-## 👀 Want to learn more?
+## Metadata
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+`BaseLayout` emits canonical, hreflang, Open Graph, Twitter Card and `LodgingBusiness` JSON-LD. All of it needs an absolute site URL, resolved at build time in this order:
+
+1. `SITE_URL`
+2. `VERCEL_PROJECT_PRODUCTION_URL` (set by Vercel)
+3. `VERCEL_URL` (set by Vercel)
+4. `http://localhost:4321`
+
+On Vercel no configuration is required. To move to a custom domain, set `SITE_URL` in the Vercel project environment variables — it takes precedence over everything else.
+
+`public/og-image.jpg` is the link-preview image: 1200x630 JPEG kept under 300KB so messaging apps render it. `pnpm test` fails if it regresses on size or format.
+
+## Deployment
+
+Vercel builds `pnpm build` and serves `dist/`. Any static host works the same way.
+
+## Tests
+
+`tests/build.test.js` asserts on the generated HTML rather than on components: link-preview tags, canonical and locale signals, sitemap contents, `robots.txt`, and page chrome. They are smoke tests, not unit tests — they catch a broken build, not a broken design decision.
